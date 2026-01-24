@@ -3,7 +3,7 @@ import Header from './Header';
 import RateCard from './RateCard';
 import HistorySection from './HistorySection';
 import { fetchRates, fetchHistory } from '../services/api';
-import { DollarSign, Euro, Wallet, Calculator, ChevronDown, ChevronUp } from 'lucide-react';
+import { DollarSign, Euro, Wallet, Calculator, ChevronDown, ChevronUp, RefreshCw, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 
@@ -13,6 +13,7 @@ function Dashboard() {
   const [calcAmount, setCalcAmount] = useState(1);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [toastAction, setToastAction] = useState(null);
   const [isSleeping, setIsSleeping] = useState(false);
 
   // Rate limiting states
@@ -39,6 +40,7 @@ function Dashboard() {
 
       if (recentRefreshes.length >= 50) { // Limit increased to 50
         setToastMessage("Límite de consultas alcanzado. Espera unos minutos.");
+        setToastAction(null);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
         return;
@@ -117,6 +119,7 @@ function Dashboard() {
   };
 
   const handleCopyNotify = (msg = "Tasa copiada") => {
+    setToastAction(null);
     setToastMessage(msg);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
@@ -161,7 +164,25 @@ function Dashboard() {
         setIsSleeping(sleeping);
       });
     }
+if (window.electronAPI) {
+      window.electronAPI.onUpdateAvailable(() => {
+        setToastMessage("Descargando nueva versión...");
+        setToastAction(null);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 4000);
+      });
 
+      window.electronAPI.onUpdateDownloaded(() => {
+        setToastMessage("Actualización lista.");
+        setToastAction({
+          label: "REINICIAR",
+          onClick: () => window.electronAPI.restartApp()
+        });
+        setShowToast(true);
+      });
+    }
+
+    
     return () => {
       window.removeEventListener('settings-updated', handleSettingsUpdate);
     };
@@ -174,7 +195,7 @@ function Dashboard() {
           onRefresh={loadRates}
           loading={loading}
         />
-        <div className="flex-1 flex flex-col gap-4 px-4 pb-4">
+        <div className="flex-1 flex flex-col gap-4 px-4 pb-4 min-h-0 overflow-hidden">
         {/* Calculator Input */}
         <div className="px-2 no-drag flex items-stretch gap-2 h-14">
           <div className="relative flex-1 flex items-center border border-white/40 rounded-2xl p-1 group focus-within:border-yellow-500/50 transition-all shadow-lg active:scale-[0.99] no-drag">
@@ -247,10 +268,10 @@ function Dashboard() {
           <div className="flex flex-col gap-1">
             <button
               onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-              className="px-3 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer no-drag rounded-xl mx-1 border border-white/20"
+              className="px-3  h-14 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer no-drag rounded-xl mx-1 border border-white/20"
             >
-              <div className="flex items-center gap-2">
-                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-200 transition-colors">Historial de Tasas</h3>
+              <div className="flex items-center gap-2 justify-center">
+                <h3 className="text-[14px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-200 transition-colors">Historial de Tasas</h3>
                 {!isHistoryExpanded && (
                   <span className="text-[8px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter">Últimos datos</span>
                 )}
@@ -267,7 +288,7 @@ function Dashboard() {
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="overflow-hidden no-drag"
+                  className="no-drag"
                 >
                   <div className="pt-4 pb-2 h-[350px]">
                     <HistorySection
@@ -295,7 +316,22 @@ function Dashboard() {
             )}
           >
             <div className={clsx("w-2.5 h-2.5 rounded-full animate-pulse shadow-sm", toastMessage.includes("Límite") ? "bg-red-200" : "bg-green-200")} />
-            <span className="tracking-widest">{toastMessage}</span>
+            <span className="tracking-widest mr-1">{toastMessage}</span>
+
+            {/* Action Button */}
+            {toastAction && (
+              <button
+                onClick={toastAction.onClick}
+                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase transition-colors flex items-center gap-1 ml-2 cursor-pointer border border-white/10"
+              >
+                <RefreshCw size={10} className={toastAction.label === "REINICIAR" ? "animate-spin-slow" : ""} />
+                {toastAction.label}
+              </button>
+            )}
+
+            {toastAction && (
+               <button onClick={() => setShowToast(false)} className="ml-1 opacity-60 hover:opacity-100 cursor-pointer">✕</button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

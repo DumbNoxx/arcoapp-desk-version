@@ -1,5 +1,10 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain, screen, nativeImage, Notification } = require('electron');
 const path = require('path');
+const { autoUpdater } = require('electron-updater');
+
+// Configuración básica de autoUpdater
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
 
 app.name = 'Arco App';
 if (process.platform === 'win32') {
@@ -46,18 +51,17 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: app.isPackaged
-      ? path.join(__dirname, '../dist/arco-logo.png')
-      : path.join(__dirname, '../public/arco-logo.png'),
-    alwaysOnTop: true
+    icon: path.join(__dirname, '../dist/arco-logo.png'),
+    alwaysOnTop: false
   });
 
   const isDev = !app.isPackaged;
-  const startURL = isDev
-    ? 'http://localhost:5173'
-    : `file://${path.join(__dirname, '../dist/index.html')}`;
-
-  mainWindow.loadURL(startURL);
+  
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:5173');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+  }
 
   mainWindow.on('ready-to-show', () => {
     const { workArea } = screen.getPrimaryDisplay();
@@ -65,6 +69,7 @@ function createWindow() {
     const y = workArea.height - 610;
     mainWindow.setPosition(x, y);
     mainWindow.show();
+    autoUpdater.checkForUpdatesAndNotify();
   });
 
   mainWindow.on('close', (event) => {
@@ -207,6 +212,15 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+// AutoUpdater events
+autoUpdater.on('update-available', () => {
+  if (mainWindow) mainWindow.webContents.send('update-available');
+});
+
+autoUpdater.on('update-downloaded', () => {
+  if (mainWindow) mainWindow.webContents.send('update-downloaded');
+});
+
 
 ipcMain.on('minimize-to-tray', () => {
   animateVisibility(false, () => {
@@ -273,3 +287,8 @@ ipcMain.on('send-rate-notification', (event, { title, body }) => {
     icon: iconPath
   }).show();
 });
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
+

@@ -32,7 +32,7 @@ const Header = ({ onRefresh, loading }) => {
     <div className="flex items-center justify-between md:p-4 mb-2 md:mb-4 drag-handle p-4" style={{ WebkitAppRegion: 'drag' }}>
       <div className={`flex items-center gap-2`}>
         <div className="p-1.5 md:p-2 bg-white/5 rounded-xl md:rounded-2xl text-indigo-400">
-          <img src="/arco-logo.png" alt="Arco Logo" className="w-5 h-5 md:w-8 md:h-8" />
+          <img src="arco-logo.png" alt="Arco Logo" className="w-5 h-5 md:w-8 md:h-8" />
         </div>
         <h1 className="text-sm md:text-lg font-bold text-white/80 tracking-tight"> <span className="text-[#537E38]">Arco</span> App</h1>
       </div>

@@ -3,14 +3,19 @@ export const fetchRates = async () => {
     const response = await fetch(import.meta.env.VITE_API_URL);
     if (response.ok) {
       const data = await response.json();
-      const date = data.current.date || {};
-      const bcv_usd_data = data.current.usd || {};
-      const bcv_euro_data = data.current.eur || {};
-      const bcv_usd_data_previous = data.previous.usd || {};
-      const bcv_euro_data_previous = data.previous.eur || {};
-      const usdt_data = data.current.paralelo || {};
-      const change_percentage_bcv_usd = data.changePercentage.usd || {};
-      const change_percentage_bcv_eur = data.changePercentage.eur || {};
+      
+      if (!data || !data.current) {
+         throw new Error("Invalid API response structure");
+      }
+
+      const date = data.current.date || new Date().toISOString();
+      const bcv_usd_data = data.current.usd || 0;
+      const bcv_euro_data = data.current.eur || 0;
+      const bcv_usd_data_previous = data.previous?.usd || 0;
+      const bcv_euro_data_previous = data.previous?.eur || 0;
+      const usdt_data = data.current.paralelo || { promedio: 0, fechaActualizacion: date };
+      const change_percentage_bcv_usd = data.changePercentage?.usd || 0;
+      const change_percentage_bcv_eur = data.changePercentage?.eur || 0;
 
 
 

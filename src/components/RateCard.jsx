@@ -66,7 +66,7 @@ const RateCard = ({ title, price, code, change, icon: Icon, color, accentColor, 
         }
       }}
       className={clsx(
-        "rounded-xl p-2 md:p-4 overflow-hidden",
+        "rounded-xl p-2 md:p-4",
         "hover:bg-white/5 border md:border-2 border-white/20 hover:rounded-3xl",
         "transition-all duration-300 ease-in flex flex-col justify-between"
       )}

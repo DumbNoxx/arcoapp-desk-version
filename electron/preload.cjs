@@ -10,5 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAutoLaunchStatus: () => ipcRenderer.invoke('get-autolaunch-status'),
   setAutoLaunchStatus: (flag) => ipcRenderer.send('set-autolaunch-status', flag),
   setNotificationsStatus: (flag) => ipcRenderer.send('set-notifications-status', flag),
-  sendRateNotification: (title, body) => ipcRenderer.send('send-rate-notification', { title, body })
+  sendRateNotification: (title, body) => ipcRenderer.send('send-rate-notification', { title, body }),
+  // Update events
+  onUpdateAvailable: (callback) => ipcRenderer.on('update-available', (_event, value) => callback(value)),
+  onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', (_event, value) => callback(value)),
+  restartApp: () => ipcRenderer.send('restart_app'),
 });

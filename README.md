@@ -8,7 +8,7 @@
 
 ¡Obtén la última versión para Windows!
 
-[**👉 Descargar Arco App para Windows**](https://github.com/CtrlS-dev/arcoapp-desk/releases/latest)
+[**👉 Descargar Arco App para Windows**](https://github.com/CtrlS-dev/arcoapp-desk-version/releases/latest)
 
 > **Nota de instalación:** Al descargar el instalador (`.exe`), Windows podría mostrar una advertencia como "Windows protegió su PC". Esto es normal en aplicaciones nuevas no firmadas. Para instalar:
 > 1. Haz clic en **"Más información"**.
@@ -43,8 +43,8 @@ Si deseas contribuir o ejecutar el proyecto localmente:
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/CtrlS-dev/arcoapp-desk.git
-   cd arcoapp-desk
+   git clone https://github.com/CtrlS-dev/arcoapp-desk-version.git
+   cd arcoapp-desk-version
    ```
 
 2. Instala las dependencias:
@@ -52,10 +52,7 @@ Si deseas contribuir o ejecutar el proyecto localmente:
    npm install
    ```
 
-3. Crea un archivo `.env` en la raíz (puedes copiar el ejemplo):
-   ```env
-   VITE_API_URL=https://api.dolarvzla.com/public/exchange-rate
-   ```
+3. Crea un archivo `.env` en la raíz
 
 4. Corre el proyecto en modo desarrollo:
    ```bash

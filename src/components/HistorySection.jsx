@@ -42,7 +42,7 @@ const HistorySection = ({ data, loading, onCopy }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent text-gray-100 overflow-hidden no-drag">
+    <div className="flex flex-col h-full bg-transparent text-gray-100 no-drag">
       {/* Filter Bar - Date Range Picker Style */}
       <div className="flex flex-col gap-2 mb-4 px-2 no-drag">
         <div className="flex items-center gap-2">
@@ -54,7 +54,7 @@ const HistorySection = ({ data, loading, onCopy }) => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full bg-[#111111] border border-white/10 rounded-xl py-1.5 pl-8 pr-2 text-[10px] focus:outline-none focus:border-white/20 focus:bg-[#161616] transition-all cursor-pointer no-drag calendar-picker-dark text-gray-300"
+              className="w-full bg-[#111111] border border-yellow-500 rounded-xl py-1.5 pl-8 pr-2 text-[10px] md:text-[14px] focus:outline-none focus:border-white/20 focus:bg-[#161616] transition-all cursor-pointer no-drag calendar-picker-dark text-gray-300"
               title="Fecha inicio"
             />
           </div>
@@ -67,7 +67,7 @@ const HistorySection = ({ data, loading, onCopy }) => {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full bg-[#111111] border border-white/10 rounded-xl py-1.5 pl-8 pr-2 text-[10px] focus:outline-none focus:border-white/20 focus:bg-[#161616] transition-all cursor-pointer no-drag calendar-picker-dark text-gray-300"
+              className="w-full bg-[#111111] border border-yellow-500 rounded-xl py-1.5 pl-8 pr-2 text-[10px] md:text-[14px] focus:outline-none focus:border-white/20 focus:bg-[#161616] transition-all cursor-pointer no-drag calendar-picker-dark text-gray-300"
               title="Fecha fin"
             />
           </div>

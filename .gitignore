@@ -15,6 +15,7 @@ out
 *.AppImage
 *.deb
 *.zip
+*.pfx
 build_log.txt
 eslint.config.js
 

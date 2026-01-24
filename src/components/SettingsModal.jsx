@@ -95,7 +95,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-xs bg-[#1A1A1A] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+            className="relative w-full max-w-xs bg-[#1A1A1A] border border-white/10 rounded-3xl shadow-2xl"
           >
             <div className="flex items-center justify-between p-4 border-b border-white/5 bg-white/5">
               <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
               <div className="pt-2 border-t border-white/5">
                 <a
-                  href="https://github.com/ArcoApp"
+                  href="https://github.com/CtrlS-dev/arcoapp-desk-version/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full p-2 text-[10px] text-gray-500 hover:text-white transition-colors uppercase tracking-widest font-bold"
