@@ -3,9 +3,9 @@ export const fetchRates = async () => {
     const response = await fetch(import.meta.env.VITE_API_URL);
     if (response.ok) {
       const data = await response.json();
-      
+
       if (!data || !data.current) {
-         throw new Error("Invalid API response structure");
+        throw new Error("Invalid API response structure");
       }
 
       const date = data.current.date || new Date().toISOString();

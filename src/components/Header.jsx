@@ -1,9 +1,9 @@
 import React from 'react';
-import { X, RefreshCw, Layers, Maximize, Pin, PinOff, Settings as SettingsIcon, History as HistoryIcon } from 'lucide-react';
+import { X, RefreshCw, Layers, Maximize, Pin, PinOff, Settings as SettingsIcon, History as HistoryIcon, ArrowRight } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 
 const Header = ({ onRefresh, loading }) => {
-  const [isPinned, setIsPinned] = React.useState(true);
+  const [isPinned, setIsPinned] = React.useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
   const handleClose = () => {
@@ -37,27 +37,27 @@ const Header = ({ onRefresh, loading }) => {
         <h1 className="text-sm md:text-lg font-bold text-white/80 tracking-tight"> <span className="text-[#537E38]">Arco</span> App</h1>
       </div>
 
-      <div className="flex items-center gap-0.5" style={{ WebkitAppRegion: 'no-drag' }}>
+      <div className="flex items-center gap-1" style={{ WebkitAppRegion: 'no-drag' }}>
         <button
           onClick={() => onRefresh(true)}
-          className={`p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-all hover:cursor-pointer hover:scale-110 ${loading ? 'animate-spin' : ''}`}
+          className={`p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all hover:cursor-pointer ${loading ? 'animate-spin' : ''}`}
           title='Recargar'
         >
-          <RefreshCw size={18} />
+          <RefreshCw size={14} />
         </button>
         <button
           onClick={togglePin}
-          className={`p-2 rounded-xl transition-colors hover:cursor-pointer outline-0 ring-0 ${isPinned ? 'bg-green-500/20 text-green-400' : 'hover:bg-white/5 text-gray-400 hover:text-white'} hover:scale-110`}
+          className={`p-1.5 rounded-lg transition-colors hover:cursor-pointer outline-0 ring-0 ${isPinned ? 'text-white' : 'hover:bg-white/10 text-gray-400 hover:text-white'}`}
           title={isPinned ? 'Desfijar' : 'Fijar'}
         >
-          {isPinned ? <Pin size={18} /> : <PinOff size={18} />}
+          {isPinned ? <Pin size={14} fill="currentColor" /> : <PinOff size={14} />}
         </button>
         <button
           onClick={() => setIsSettingsOpen(true)}
-          className="p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors hover:cursor-pointer hover:scale-110"
+          className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors hover:cursor-pointer"
           title='Configuración'
         >
-          <SettingsIcon size={18} />
+          <SettingsIcon size={14} />
         </button>
         <button
           onClick={handleMaximize}

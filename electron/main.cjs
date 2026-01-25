@@ -56,7 +56,7 @@ function createWindow() {
   });
 
   const isDev = !app.isPackaged;
-  
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173');
   } else {
