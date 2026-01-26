@@ -172,16 +172,22 @@ function Dashboard() {
     }
     if (window.electronAPI) {
       window.electronAPI.onUpdateAvailable(() => {
-        setToastMessage("Descargando nueva versión...");
-        setToastAction(null);
+        setToastMessage("Nueva versión de Arco disponible. ¿Desea descargar?");
+        setToastAction({
+          label: "DESCARGAR",
+          onClick: () => {
+            window.electronAPI.downloadUpdate();
+            setToastMessage("Descargando nueva versión de Arco... La app ya se está descargando.");
+            setToastAction(null);
+          }
+        });
         setShowToast(true);
-        setTimeout(() => setShowToast(false), 4000);
       });
 
       window.electronAPI.onUpdateDownloaded(() => {
-        setToastMessage("Actualización lista.");
+        setToastMessage("Actualización de Arco lista. ¿Desea instalar?");
         setToastAction({
-          label: "REINICIAR",
+          label: "INSTALAR",
           onClick: () => window.electronAPI.restartApp()
         });
         setShowToast(true);

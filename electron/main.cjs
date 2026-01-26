@@ -3,7 +3,7 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
 // Configuración básica de autoUpdater
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
 app.name = 'Arco App';
@@ -69,7 +69,7 @@ function createWindow() {
     const y = workArea.height - 610;
     mainWindow.setPosition(x, y);
     mainWindow.show();
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
   });
 
   mainWindow.on('close', (event) => {
@@ -286,6 +286,10 @@ ipcMain.on('send-rate-notification', (event, { title, body }) => {
     body,
     icon: iconPath
   }).show();
+});
+
+ipcMain.on('download-update', () => {
+  autoUpdater.downloadUpdate();
 });
 
 ipcMain.on('restart_app', () => {
