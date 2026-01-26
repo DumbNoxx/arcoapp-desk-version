@@ -72,7 +72,7 @@ function Dashboard() {
             notificationBody += `Euro BCV: ${currentEur} Bs`;
           }
           if (lastP2P && lastP2P !== currentP2P) {
-            notificationBody += `USDT P2P: ${currentP2P} Bs`;
+            notificationBody += `P2P: ${currentP2P} Bs`;
           }
 
           if (notificationBody) {
@@ -265,7 +265,7 @@ function Dashboard() {
                     calcAmount={calcAmount} onCopy={handleCopyNotify} calcMode={calcMode}
                   />
                   <RateCard
-                    title="P2P (Promedio)" price={rates?.usdt?.price || 0} change={rates?.usdt?.change || 0}
+                    title="P2P" price={rates?.usdt?.price || 0} change={rates?.usdt?.change || 0}
                     last_update={rates?.usdt?.last_update || 0} previous_price={rates?.usdt?.previous_price || 0}
                     code="Bs" icon={Wallet} color="text-[#5A853B]" accentColor="bg-[#5A853B]"
                     calcAmount={calcAmount} onCopy={handleCopyNotify} calcMode={calcMode}
