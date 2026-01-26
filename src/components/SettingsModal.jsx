@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Settings, Power, Info, ExternalLink, Calculator, Tag, DollarSign, Bell, BellOff } from 'lucide-react';
+import { X, Settings, Power, Info, ExternalLink, Calculator, Tag, DollarSign, Bell, BellOff, Activity } from 'lucide-react';
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const [autoLaunch, setAutoLaunch] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [runInBackground, setRunInBackground] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const [customRateEnabled, setCustomRateEnabled] = useState(false);
@@ -28,6 +29,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
           if (window.electronAPI?.setNotificationsStatus) {
             window.electronAPI.setNotificationsStatus(savedNotifications);
           }
+
+          const savedRunInBackground = localStorage.getItem('run-in-background') === 'true';
+          setRunInBackground(savedRunInBackground);
 
           setCustomRateEnabled(savedEnabled);
           setCustomRateName(savedName);
@@ -57,6 +61,15 @@ const SettingsModal = ({ isOpen, onClose }) => {
     localStorage.setItem('notifications-enabled', nextValue);
     if (window.electronAPI?.setNotificationsStatus) {
       window.electronAPI.setNotificationsStatus(nextValue);
+    }
+  };
+
+  const toggleRunInBackground = () => {
+    const nextValue = !runInBackground;
+    setRunInBackground(nextValue);
+    localStorage.setItem('run-in-background', nextValue);
+    if (window.electronAPI?.setRunInBackgroundStatus) {
+      window.electronAPI.setRunInBackgroundStatus(nextValue);
     }
   };
 
@@ -136,6 +149,17 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     <div className="text-center">
                       <p className="text-[10px] md:text-[12px] font-bold text-white uppercase tracking-tight">Avisos</p>
                       <p className="text-[9px] md:text-[10px] text-gray-500 font-semibold">{notificationsEnabled ? "Activado" : "Desactivado"}</p>
+                    </div>
+                  </button>
+
+                  <button onClick={toggleRunInBackground} className={`col-span-2 flex ring-0 outline-none flex-col items-center justify-center gap-2 p-3 rounded-2xl border border-white/5 transition-colors ease-in duration-200 ${runInBackground ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-white/5'
+                    } cursor-pointer hover:scale-105 transition-transform`}>
+                    <div className="p-2 bg-indigo-500/10 rounded-xl">
+                      <Activity className={`w-5 h-5 ${runInBackground ? 'text-indigo-400' : 'text-gray-400'}`} />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[10px] md:text-[12px] font-bold text-white uppercase tracking-tight">Ejecutar en 2do Plano</p>
+                      <p className="text-[9px] md:text-[10px] text-gray-500 font-semibold">{runInBackground ? "Activado" : "Desactivado"}</p>
                     </div>
                   </button>
                 </div>

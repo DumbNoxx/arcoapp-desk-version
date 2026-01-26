@@ -76,7 +76,7 @@ function Dashboard() {
           }
 
           if (notificationBody) {
-            window.electronAPI.sendRateNotification("Nueva Tasa del BCV", notificationBody.trim());
+            window.electronAPI.sendRateNotification("Nueva Tasa", notificationBody.trim());
           }
 
           localStorage.setItem('last-bcv-usd', currentUsd);
@@ -159,6 +159,11 @@ function Dashboard() {
     loadRates();
     loadHistoryData(); // Auto load history
     loadCustomRate();
+
+    const savedRunInBackground = localStorage.getItem('run-in-background') === 'true';
+    if (window.electronAPI?.setRunInBackgroundStatus) {
+      window.electronAPI.setRunInBackgroundStatus(savedRunInBackground);
+    }
 
     const handleSettingsUpdate = () => {
       loadCustomRate();

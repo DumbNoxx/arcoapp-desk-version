@@ -8,7 +8,7 @@ const Header = ({ onRefresh, loading }) => {
 
   const handleClose = () => {
     if (window.electronAPI) {
-      window.electronAPI.minimizeToTray();
+      window.electronAPI.closeWindow();
     } else {
       console.warn("Electron API not found");
     }

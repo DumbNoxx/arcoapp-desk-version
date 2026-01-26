@@ -30,6 +30,7 @@ if (!gotTheLock) {
 
 let mainWindow;
 let notificationsEnabled = true;
+let runInBackground = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -73,7 +74,7 @@ function createWindow() {
   });
 
   mainWindow.on('close', (event) => {
-    if (!app.isQuiting) {
+    if (!app.isQuiting && runInBackground) {
       event.preventDefault();
       animateVisibility(false, () => {
         mainWindow.hide();
@@ -228,6 +229,10 @@ ipcMain.on('minimize-to-tray', () => {
   });
 });
 
+ipcMain.on('window-close', () => {
+  mainWindow.close();
+});
+
 ipcMain.on('window-maximize', () => {
   const [width, height] = mainWindow.getSize();
   if (width < 1000 || height < 720) {
@@ -294,5 +299,13 @@ ipcMain.on('download-update', () => {
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall();
+});
+
+ipcMain.on('set-run-in-background-status', (event, flag) => {
+  runInBackground = flag;
+});
+
+ipcMain.handle('get-run-in-background-status', () => {
+  return runInBackground;
 });
 
