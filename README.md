@@ -2,8 +2,6 @@
 
 **Arco App** es una aplicación de escritorio minimalista construida con Electron y React para monitorear las tasas oficiales del **Banco Central de Venezuela (BCV)** en tiempo real.
 
-![Interfaz de Arco App](public/arco-logo.png)
-
 ## 📥 Descarga la App
 
 ¡Obtén la última versión para Windows!
