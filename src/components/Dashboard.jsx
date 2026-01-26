@@ -57,9 +57,11 @@ function Dashboard() {
         if (data?.bcv_usd?.price && data?.bcv_eur?.price && window.electronAPI?.sendRateNotification) {
           const lastUsd = localStorage.getItem('last-bcv-usd');
           const lastEur = localStorage.getItem('last-bcv-eur');
+          const lastP2P = localStorage.getItem('last-usdt-p2p');
 
           const currentUsd = data.bcv_usd.price.toString();
           const currentEur = data.bcv_eur.price.toString();
+          const currentP2P = data.usdt.price.toString();
 
           let notificationBody = "";
 
@@ -69,6 +71,9 @@ function Dashboard() {
           if (lastEur && lastEur !== currentEur) {
             notificationBody += `Euro BCV: ${currentEur} Bs`;
           }
+          if (lastP2P && lastP2P !== currentP2P) {
+            notificationBody += `USDT P2P: ${currentP2P} Bs`;
+          }
 
           if (notificationBody) {
             window.electronAPI.sendRateNotification("Nueva Tasa del BCV", notificationBody.trim());
@@ -76,6 +81,7 @@ function Dashboard() {
 
           localStorage.setItem('last-bcv-usd', currentUsd);
           localStorage.setItem('last-bcv-eur', currentEur);
+          localStorage.setItem('last-usdt-p2p', currentP2P);
         }
 
         setRates(data);
