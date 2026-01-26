@@ -6,6 +6,8 @@ import { fetchRates, fetchHistory } from '../services/api';
 import { DollarSign, Euro, Wallet, Calculator, ChevronDown, ChevronUp, RefreshCw, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 function Dashboard() {
   const [rates, setRates] = useState(null);
@@ -205,6 +207,79 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!loading && !isSleeping) {
+      const hasSeenTutorial = localStorage.getItem('tutorial-seen');
+      
+      if (!hasSeenTutorial) {
+        const driverObj = driver({
+          showProgress: true,
+          nextBtnText: 'Siguiente',
+          prevBtnText: 'Anterior',
+          doneBtnText: 'Entendido',
+          steps: [
+            { 
+              element: '#calc-container', 
+              popover: { 
+                title: 'Calculadora Integrada', 
+                description: 'Convierte montos rápidamente entre Dólares y Bolívares usando la tasa del día.' 
+              } 
+            },
+            { 
+              element: '#calc-mode-btn', 
+              popover: { 
+                title: 'Cambiar Moneda', 
+                description: 'Alterna entre conversión de USD a Bs y viceversa con un solo clic.' 
+              } 
+            },
+            { 
+              element: '#rates-grid', 
+              popover: { 
+                title: 'Tasas en Tiempo Real', 
+                description: 'Visualiza las tasas del BCV (Dólar y Euro) y un promedio de transacciones P2P. Haz clic en una tarjeta para copiar el valor.' 
+              } 
+            },
+            { 
+              element: '#history-btn', 
+              popover: { 
+                title: 'Historial de Tasas', 
+                description: 'Consulta el comportamiento de las tasas en los últimos días.' 
+              } 
+            },
+            { 
+              element: '#header-refresh', 
+              popover: { 
+                title: 'Actualizar', 
+                description: 'Refresca las tasas manualmente si lo necesitas.' 
+              } 
+            },
+            { 
+              element: '#header-pin', 
+              popover: { 
+                title: 'Fijar Ventana', 
+                description: 'Mantén la app siempre visible por encima de otras ventanas.' 
+              } 
+            },
+            { 
+              element: '#header-settings', 
+              popover: { 
+                title: 'Configuración', 
+                description: 'Personaliza notificaciones, selecciona fuentes de historial y más.' 
+              } 
+            }
+          ],
+          onDestroyStarted: () => {
+             localStorage.setItem('tutorial-seen', 'true');
+             driverObj.destroy();
+          },
+        });
+        
+        // Pequeño delay para asegurar que todo esté renderizado
+        setTimeout(() => driverObj.drive(), 1000);
+      }
+    }
+  }, [loading, isSleeping]);
+
   return (
     <div className="h-screen w-full flex flex-col">
       <div className="relative z-10 flex flex-col h-full gap-4">
@@ -215,7 +290,7 @@ function Dashboard() {
         <div className="flex-1 flex flex-col gap-4 px-4 pb-4 min-h-0 overflow-hidden">
           {/* Calculator Input */}
           <div className="px-2 no-drag">
-            <div className="flex items-center justify-between border border-white/20 rounded-xl p-6 h-24 md:h-32 hover:border-white/30 transition-colors">
+            <div id="calc-container" className="flex items-center justify-between border border-white/20 rounded-xl p-6 h-24 md:h-32 hover:border-white/30 transition-colors">
               <input
                 type="text"
                 inputMode="numeric"
@@ -226,6 +301,7 @@ function Dashboard() {
               />
 
               <button
+                id="calc-mode-btn"
                 onClick={toggleCalcMode}
                 className="flex-shrink-0 md:px-6 px-2 md:py-4 py-2 rounded-xl border border-yellow-500/20 hover:bg-yellow-500/10 text-yellow-500 transition-all cursor-pointer active:scale-95 ease-in duration-200"
                 title="Cambiar dirección de cálculo"
@@ -239,7 +315,7 @@ function Dashboard() {
 
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col gap-6 overflow-y-auto no-drag pr-1">
-            {/* Rate Cards Grid */}
+            {/*  id="rates-grid"Rate Cards Grid */}
             <div>
               {loading && !isSleeping ? (
                 <div className="flex flex-col items-center justify-center py-10 gap-4">
@@ -284,6 +360,7 @@ function Dashboard() {
             {/* History Section - Expandable Accordion */}
             <div className="flex flex-col gap-1">
               <button
+                id="history-btn"
                 onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                 className="px-3  h-14 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer no-drag rounded-xl mx-1 border border-white/20"
               >

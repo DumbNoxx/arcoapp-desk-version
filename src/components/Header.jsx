@@ -39,6 +39,7 @@ const Header = ({ onRefresh, loading }) => {
 
       <div className="flex items-center gap-1" style={{ WebkitAppRegion: 'no-drag' }}>
         <button
+          id="header-refresh"
           onClick={() => onRefresh(true)}
           className={`p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all hover:cursor-pointer ${loading ? 'animate-spin' : ''}`}
           title='Recargar'
@@ -46,6 +47,7 @@ const Header = ({ onRefresh, loading }) => {
           <RefreshCw size={14} />
         </button>
         <button
+          id="header-pin"
           onClick={togglePin}
           className={`p-1.5 rounded-lg transition-colors hover:cursor-pointer outline-0 ring-0 ${isPinned ? 'text-white' : 'hover:bg-white/10 text-gray-400 hover:text-white'}`}
           title={isPinned ? 'Desfijar' : 'Fijar'}
@@ -53,6 +55,7 @@ const Header = ({ onRefresh, loading }) => {
           {isPinned ? <Pin size={14} fill="currentColor" /> : <PinOff size={14} />}
         </button>
         <button
+          id="header-settings"
           onClick={() => setIsSettingsOpen(true)}
           className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors hover:cursor-pointer"
           title='Configuración'

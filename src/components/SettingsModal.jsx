@@ -108,9 +108,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-xs bg-[#1A1A1A] border border-white/10 rounded-3xl shadow-2xl"
+            className="relative w-full max-w-xs bg-[#1A1A1A] border border-white/10 rounded-3xl shadow-2xl flex flex-col max-h-[420px] md:max-h-[600px] overflow-hidden"
           >
-            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-white/5">
+            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-white/5 shrink-0">
               <div className="flex items-center gap-2">
                 <Settings className="w-4 h-4 text-indigo-400" />
                 <span className="text-sm font-bold text-white uppercase tracking-widest">Configuración</span>
@@ -123,7 +123,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
               </button>
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 overflow-y-auto">
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <button onClick={toggleAutoLaunch} className={`flex ring-0 outline-none flex-col items-center justify-center gap-2 p-3 rounded-2xl border border-white/5 transition-colors ease-in duration-200 ${autoLaunch ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-white/5'
@@ -152,7 +152,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     </div>
                   </button>
 
-                  <button onClick={toggleRunInBackground} className={`col-span-2 flex ring-0 outline-none flex-col items-center justify-center gap-2 p-3 rounded-2xl border border-white/5 transition-colors ease-in duration-200 ${runInBackground ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-white/5'
+                  <button onClick={toggleRunInBackground} className={`flex ring-0 outline-none flex-col items-center justify-center gap-2 p-3 rounded-2xl border border-white/5 transition-colors ease-in duration-200 ${runInBackground ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-white/5'
                     } cursor-pointer hover:scale-105 transition-transform`}>
                     <div className="p-2 bg-indigo-500/10 rounded-xl">
                       <Activity className={`w-5 h-5 ${runInBackground ? 'text-indigo-400' : 'text-gray-400'}`} />
@@ -162,19 +162,19 @@ const SettingsModal = ({ isOpen, onClose }) => {
                       <p className="text-[9px] md:text-[10px] text-gray-500 font-semibold">{runInBackground ? "Activado" : "Desactivado"}</p>
                     </div>
                   </button>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5 opacity-60">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-500/10 rounded-xl">
-                      <Info className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm md:text-[12px] font-medium text-white">Versión</p>
-                      <p className="text-[10px] md:text-[12px] text-gray-500">0.0.6</p>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5 opacity-60">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gray-500/10 rounded-xl">
+                        <Info className="w-4 h-4 text-gray-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm md:text-[12px] font-medium text-white">Versión</p>
+                        <p className="text-[10px] md:text-[12px] text-gray-500">0.0.6</p>
+                      </div>
                     </div>
                   </div>
                 </div>
+
 
                 <div className="pt-2 border-t border-white/5">
                   <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Tasa Personalizada</p>
