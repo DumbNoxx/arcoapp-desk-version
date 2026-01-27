@@ -25,7 +25,7 @@ export const fetchRates = async () => {
     if (!data || !data.current) {
       throw new Error("Invalid API response structure");
     }
- 
+
     const date = data.current.date || new Date().toISOString();
 
     const bcv_usd_data = data.current.usd || 0;
@@ -75,7 +75,12 @@ export const fetchRates = async () => {
 
 export const fetchHistory = async () => {
   try {
-    const response = await fetch(import.meta.env.VITE_API_URL_HISTORY);
+    const response = await fetch(import.meta.env.VITE_API_URL_HISTORY, {
+      method: "GET",
+      headers: {
+        "x-dolarvzla-key": import.meta.env.VITE_API_KEY,
+      },
+    });
     if (response.ok) {
       const data = await response.json();
       return data.rates || [];
