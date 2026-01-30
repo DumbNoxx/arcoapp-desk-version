@@ -1,7 +1,7 @@
 {
   "name": "arco-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimalist exchange rate tracker for BCV",
   "overrides": {
     "tar": "^7.5.6"
