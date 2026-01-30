@@ -144,22 +144,22 @@ const HistorySection = ({ data, loading, onCopy }) => {
           ) : <div />}
 
           {filteredData.length > 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={exportToCSV}
-                className="text-[12px] flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer no-drag uppercase tracking-tighter font-bold"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer group"
                 title="Exportar a CSV"
               >
-                <Download size={22} />
-                CSV
+                <Download size={14} className="text-gray-400 group-hover:text-white" />
+                <span className="text-[10px] font-bold text-gray-400 group-hover:text-white uppercase tracking-widest">CSV</span>
               </button>
               <button
                 onClick={exportToExcel}
-                className="text-[12px] flex items-center gap-1 text-gray-500 hover:text-green-400 transition-colors cursor-pointer no-drag uppercase tracking-tighter font-bold"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all cursor-pointer group"
                 title="Exportar a Excel"
               >
-                <FileSpreadsheet size={22} />
-                Excel
+                <FileSpreadsheet size={14} className="text-emerald-500/80 group-hover:text-emerald-400" />
+                <span className="text-[10px] font-bold text-emerald-500/80 group-hover:text-emerald-400 uppercase tracking-widest">Excel</span>
               </button>
             </div>
           )}

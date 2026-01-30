@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import RateCard from './RateCard';
 import HistorySection from './HistorySection';
-import { fetchRates, fetchHistory } from '../services/api';
+import HistoryP2PSection from './HistoryP2PSection';
+import { fetchRates, fetchHistory, fetchHistoryAdvanced } from '../services/api';
 import { DollarSign, Euro, Wallet, Calculator, ChevronDown, ChevronUp, RefreshCw, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
@@ -25,6 +26,10 @@ function Dashboard() {
   const [historyData, setHistoryData] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
+
+  const [historyP2PData, setHistoryP2PData] = useState([]);
+  const [loadingP2PHistory, setLoadingP2PHistory] = useState(false);
+  const [isHistoryP2PExpanded, setIsHistoryP2PExpanded] = useState(false);
 
   const [customRate, setCustomRate] = useState({
     enabled: false,
@@ -118,6 +123,25 @@ function Dashboard() {
     }
   };
 
+  const loadHistoryP2PData = async () => {
+    setLoadingP2PHistory(true);
+    try {
+      // 48 hours ago
+      const fromDate = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+      const result = await fetchHistoryAdvanced({
+        nombre: 'USDT',
+        from: fromDate,
+        limit: 500,
+        order: 'desc'
+      });
+      setHistoryP2PData(result.rates || []);
+    } catch (error) {
+      console.error("Failed to load P2P history", error);
+    } finally {
+      setLoadingP2PHistory(false);
+    }
+  };
+
   const loadCustomRate = () => {
     const enabled = localStorage.getItem('custom-rate-enabled') === 'true';
     const name = localStorage.getItem('custom-rate-name') || "Tasa Personalizada";
@@ -159,7 +183,8 @@ function Dashboard() {
 
   useEffect(() => {
     loadRates();
-    loadHistoryData(); // Auto load history
+    loadHistoryData();
+    loadHistoryP2PData();
     loadCustomRate();
 
     const savedRunInBackground = localStorage.getItem('run-in-background') === 'true';
@@ -210,7 +235,7 @@ function Dashboard() {
   useEffect(() => {
     if (!loading && !isSleeping) {
       const hasSeenTutorial = localStorage.getItem('tutorial-seen');
-      
+
       if (!hasSeenTutorial) {
         const driverObj = driver({
           showProgress: true,
@@ -218,62 +243,62 @@ function Dashboard() {
           prevBtnText: 'Anterior',
           doneBtnText: 'Entendido',
           steps: [
-            { 
-              element: '#calc-container', 
-              popover: { 
-                title: 'Calculadora Integrada', 
-                description: 'Convierte montos rápidamente entre Dólares y Bolívares usando la tasa del día.' 
-              } 
+            {
+              element: '#calc-container',
+              popover: {
+                title: 'Calculadora Integrada',
+                description: 'Convierte montos rápidamente entre Dólares y Bolívares usando la tasa del día.'
+              }
             },
-            { 
-              element: '#calc-mode-btn', 
-              popover: { 
-                title: 'Cambiar Moneda', 
-                description: 'Alterna entre conversión de USD a Bs y viceversa con un solo clic.' 
-              } 
+            {
+              element: '#calc-mode-btn',
+              popover: {
+                title: 'Cambiar Moneda',
+                description: 'Alterna entre conversión de USD a Bs y viceversa con un solo clic.'
+              }
             },
-            { 
-              element: '#rates-grid', 
-              popover: { 
-                title: 'Tasas en Tiempo Real', 
-                description: 'Visualiza las tasas del BCV (Dólar y Euro) y un promedio de transacciones P2P. Haz clic en una tarjeta para copiar el valor.' 
-              } 
+            {
+              element: '#rates-grid',
+              popover: {
+                title: 'Tasas en Tiempo Real',
+                description: 'Visualiza las tasas del BCV (Dólar y Euro) y un promedio de transacciones P2P. Haz clic en una tarjeta para copiar el valor.'
+              }
             },
-            { 
-              element: '#history-btn', 
-              popover: { 
-                title: 'Historial de Tasas', 
-                description: 'Consulta el comportamiento de las tasas en los últimos días.' 
-              } 
+            {
+              element: '#history-btn',
+              popover: {
+                title: 'Historial BCV',
+                description: 'Consulta el comportamiento de las tasas en los últimos días.'
+              }
             },
-            { 
-              element: '#header-refresh', 
-              popover: { 
-                title: 'Actualizar', 
-                description: 'Refresca las tasas manualmente si lo necesitas.' 
-              } 
+            {
+              element: '#header-refresh',
+              popover: {
+                title: 'Actualizar',
+                description: 'Refresca las tasas manualmente si lo necesitas.'
+              }
             },
-            { 
-              element: '#header-pin', 
-              popover: { 
-                title: 'Fijar Ventana', 
-                description: 'Mantén la app siempre visible por encima de otras ventanas.' 
-              } 
+            {
+              element: '#header-pin',
+              popover: {
+                title: 'Fijar Ventana',
+                description: 'Mantén la app siempre visible por encima de otras ventanas.'
+              }
             },
-            { 
-              element: '#header-settings', 
-              popover: { 
-                title: 'Configuración', 
-                description: 'Personaliza notificaciones, selecciona fuentes de historial y más.' 
-              } 
+            {
+              element: '#header-settings',
+              popover: {
+                title: 'Configuración',
+                description: 'Personaliza notificaciones, selecciona fuentes de historial y más.'
+              }
             }
           ],
           onDestroyStarted: () => {
-             localStorage.setItem('tutorial-seen', 'true');
-             driverObj.destroy();
+            localStorage.setItem('tutorial-seen', 'true');
+            driverObj.destroy();
           },
         });
-        
+
         // Pequeño delay para asegurar que todo esté renderizado
         setTimeout(() => driverObj.drive(), 1000);
       }
@@ -330,18 +355,21 @@ function Dashboard() {
                 >
                   <RateCard
                     title="BCV Dólar" price={rates?.bcv_usd?.price || 0} change={rates?.bcv_usd?.change || 0}
+                    price_change={rates?.bcv_usd?.price_change || 0}
                     last_update={rates?.bcv_usd?.last_update || 0} previous_price={rates?.bcv_usd?.previous_price || 0}
                     code="Bs" icon={DollarSign} color="text-[#5A853B]" accentColor="bg-[#5A853B]"
                     calcAmount={calcAmount} onCopy={handleCopyNotify} calcMode={calcMode}
                   />
                   <RateCard
                     title="BCV Euro" price={rates?.bcv_eur?.price || 0} change={rates?.bcv_eur?.change || 0}
+                    price_change={rates?.bcv_eur?.price_change || 0}
                     last_update={rates?.bcv_eur?.last_update || 0} previous_price={rates?.bcv_eur?.previous_price || 0}
                     code="Bs" icon={Euro} color="text-[#5A853B]" accentColor="bg-[#5A853B]"
                     calcAmount={calcAmount} onCopy={handleCopyNotify} calcMode={calcMode}
                   />
                   <RateCard
                     title="P2P" price={rates?.usdt?.price || 0} change={rates?.usdt?.change || 0}
+                    price_change={rates?.usdt?.price_change || 0}
                     last_update={rates?.usdt?.last_update || 0} previous_price={rates?.usdt?.previous_price || 0}
                     code="Bs" icon={Wallet} color="text-[#5A853B]" accentColor="bg-[#5A853B]"
                     calcAmount={calcAmount} onCopy={handleCopyNotify} calcMode={calcMode}
@@ -365,7 +393,7 @@ function Dashboard() {
                 className="px-3  h-14 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer no-drag rounded-xl mx-1 border border-white/20"
               >
                 <div className="flex items-center gap-2 justify-center">
-                  <h3 className="text-[14px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-200 transition-colors">Historial de Tasas</h3>
+                  <h3 className="text-[14px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-200 transition-colors">Historial BCV</h3>
                   {!isHistoryExpanded && (
                     <span className="text-[8px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter">Últimos datos</span>
                   )}
@@ -388,6 +416,44 @@ function Dashboard() {
                       <HistorySection
                         data={historyData}
                         loading={loadingHistory}
+                        onCopy={handleCopyNotify}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* History P2P Section - Expandable Accordion */}
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => setIsHistoryP2PExpanded(!isHistoryP2PExpanded)}
+                className="px-3  h-14 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer no-drag rounded-xl mx-1 border border-white/20"
+              >
+                <div className="flex items-center gap-2 justify-center">
+                  <h3 className="text-[14px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-200 transition-colors">Historial P2P</h3>
+                  {!isHistoryP2PExpanded && (
+                    <span className="text-[8px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter">48H</span>
+                  )}
+                </div>
+                <div className="text-gray-500">
+                  {isHistoryP2PExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {isHistoryP2PExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="no-drag"
+                  >
+                    <div className="pt-4 pb-2 h-[350px]">
+                      <HistoryP2PSection
+                        data={historyP2PData}
+                        loading={loadingP2PHistory}
                         onCopy={handleCopyNotify}
                       />
                     </div>

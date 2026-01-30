@@ -78,21 +78,24 @@ export const fetchRates = async () => {
     return {
       bcv_usd: BCV ? {
         price: BCV.valor || 0,
-        change: 0,
+        change: BCV.porcentaje_cambio || 0,
+        price_change: BCV.cambio || 0,
         last_update: BCV.fecha || backendData.timestamp,
-        previous_price: 0,
+        previous_price: BCV.previo || 0,
       } : defaultRates.bcv_usd,
       bcv_eur: BCV_EUR ? {
         price: BCV_EUR.valor || 0,
-        change: 0,
+        change: BCV_EUR.porcentaje_cambio || 0,
+        price_change: BCV_EUR.cambio || 0,
         last_update: BCV_EUR.fecha || backendData.timestamp,
-        previous_price: 0,
+        previous_price: BCV_EUR.previo || 0,
       } : defaultRates.bcv_eur,
       usdt: USDT ? {
         price: USDT.valor || 0,
-        change: 0,
+        change: USDT.porcentaje_cambio || 0,
+        price_change: USDT.cambio || 0,
         last_update: USDT.fecha || backendData.timestamp,
-        previous_price: 0,
+        previous_price: USDT.previo || 0,
       } : defaultRates.usdt,
     };
   } catch (backendError) {
@@ -202,14 +205,14 @@ export const fetchHistory = async () => {
 
     // Agrupar registros por fecha para crear el formato { date, usd, eur }
     const groupedByDate = {};
-    
+
     result.data.forEach(item => {
       const dateKey = item.fecha.split('T')[0]; // Solo la fecha YYYY-MM-DD
-      
+
       if (!groupedByDate[dateKey]) {
         groupedByDate[dateKey] = { date: dateKey, usd: 0, eur: 0 };
       }
-      
+
       // Asignar valores según el tipo
       if (item.nombre === 'BCV') {
         groupedByDate[dateKey].usd = item.valor;
@@ -281,6 +284,9 @@ export const fetchHistoryAdvanced = async (options = {}) => {
       id: item.id,
       type: item.nombre,
       value: item.valor,
+      previous_value: item.previo || item.previous_value || 0,
+      change: item.porcentaje_cambio || item.change || 0,
+      price_change: item.cambio || 0,
       date: item.fecha,
       timestamp: new Date(item.fecha).getTime()
     }));

@@ -3,19 +3,48 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Copy, Check } from 'lucide-react';
 import clsx from 'clsx';
 
-const RateCard = ({ title, price, code, change, icon: Icon, color, accentColor, last_update, previous_price, calcAmount, onCopy, calcMode }) => {
-  const isPositive = change > 0;
-  const isNegative = change < 0;
+const RateCard = ({ title, price, code, change, price_change, icon: Icon, color, accentColor, last_update, previous_price, calcAmount, onCopy, calcMode }) => {
+
+  const calculatedChange = change !== undefined && change !== 0
+    ? change
+    : ((price && previous_price) ? ((price - previous_price) / previous_price) * 100 : 0);
+
+
+  const absoluteChange = price_change !== undefined && price_change !== 0
+    ? price_change
+    : (price && previous_price ? price - previous_price : 0);
+
+  const isPositive = calculatedChange > 0 || absoluteChange > 0;
+  const isNegative = calculatedChange < 0 || absoluteChange < 0;
   const [copied, setCopied] = useState(false);
 
   const formatDate = (dateStr) => {
-    if (!dateStr || typeof dateStr !== 'string') return dateStr;
-    const parts = dateStr.split('-');
-    if (parts.length === 3 && parts[0].length === 4) {
-      const [year, month, day] = parts;
-      return `${day}-${month}-${year}`;
+    if (!dateStr || dateStr === 'Personalizada') return dateStr;
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return dateStr;
+
+
+      const now = new Date();
+      const isToday = date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear();
+
+      if (isToday) {
+        return `Hoy, ${date.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+      }
+
+      return new Intl.DateTimeFormat('es-VE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }).format(date);
+    } catch (e) {
+      return dateStr;
     }
-    return dateStr;
   };
 
   const formatCurrency = (val) => {
@@ -86,7 +115,9 @@ const RateCard = ({ title, price, code, change, icon: Icon, color, accentColor, 
               isPositive ? "bg-green-500/10 text-green-400" : isNegative ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"
             )}>
               {isPositive ? <TrendingUp size={8} className="md:w-[10px] md:h-[10px]" /> : isNegative ? <TrendingDown size={8} className="md:w-[10px] md:h-[10px]" /> : <Minus size={8} className="md:w-[10px] md:h-[10px]" />}
-              {Math.abs(change).toFixed(2)}%
+              <span className="mr-0.5">{Math.abs(absoluteChange).toFixed(2)} Bs</span>
+              <span className="opacity-50 mx-0.5">|</span>
+              <span>{Math.abs(calculatedChange).toFixed(2)}%</span>
             </div>
           </div>
         </div>
@@ -108,7 +139,9 @@ const RateCard = ({ title, price, code, change, icon: Icon, color, accentColor, 
               isPositive ? "bg-green-500/10 text-green-400" : isNegative ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"
             )}>
               {isPositive ? <TrendingUp size={8} className="md:w-[10px] md:h-[10px]" /> : isNegative ? <TrendingDown size={8} className="md:w-[10px] md:h-[10px]" /> : <Minus size={8} className="md:w-[10px] md:h-[10px]" />}
-              {Math.abs(change).toFixed(2)}%
+              <span className="mr-0.5">{Math.abs(absoluteChange).toFixed(2)} Bs</span>
+              <span className="opacity-50 mx-0.5">|</span>
+              <span>{Math.abs(calculatedChange).toFixed(2)}%</span>
             </div>
           </div>
         </div>
